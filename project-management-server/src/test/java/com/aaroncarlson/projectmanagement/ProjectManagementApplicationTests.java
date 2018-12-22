@@ -1,4 +1,4 @@
-package com.aaroncarlson;
+package com.aaroncarlson.projectmanagement;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
