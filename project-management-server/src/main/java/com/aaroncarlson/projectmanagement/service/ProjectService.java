@@ -22,4 +22,14 @@ public class ProjectService {
             throw new CustomException("Identifier '" + project.getIdentifier().toUpperCase() + "' must be unique");
         }
     }
+
+    public Project findByIdentifier(String identifier) {
+        Project project = projectRepository.findByIdentifier(identifier.toUpperCase());
+
+        if (project == null) {
+            throw new CustomException("Identifier '" + identifier + "' does not exist");
+        }
+
+        return project;
+    }
 }
