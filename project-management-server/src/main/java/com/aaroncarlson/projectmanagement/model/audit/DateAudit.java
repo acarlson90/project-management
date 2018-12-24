@@ -36,11 +36,11 @@ public abstract class DateAudit implements Serializable {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    @JsonFormat(pattern = Constants.DATE_FORMAT_TIME_PERCISION)
+    @JsonFormat(pattern = Constants.DATE_FORMAT_TIME_PERCISION, timezone = Constants.TIME_ZONE)
     private Instant createdAt;
     @LastModifiedDate
     @Column(nullable = false)
-    @JsonFormat(pattern = Constants.DATE_FORMAT_TIME_PERCISION)
+    @JsonFormat(pattern = Constants.DATE_FORMAT_TIME_PERCISION, timezone = Constants.TIME_ZONE)
     private Instant updatedAt;
 
 }
