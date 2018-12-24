@@ -2,7 +2,7 @@ package com.aaroncarlson.projectmanagement.api.controller;
 
 import com.aaroncarlson.projectmanagement.model.Project;
 import com.aaroncarlson.projectmanagement.service.ProjectService;
-import org.apache.tomcat.util.http.ResponseUtil;
+import com.aaroncarlson.projectmanagement.service.ValidationErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +20,8 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    ValidationErrorService validationErrorService;
 
     /*
      * @Valid ensures the method receives a valid @RequestBody of type Project
@@ -30,13 +32,12 @@ public class ProjectController {
      */
     @PostMapping("")
     public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
-
-        if (result.hasErrors()) {
-            return new ResponseEntity<String>("Invalid Project", HttpStatus.BAD_REQUEST);
+        ResponseEntity<?> errorResponseEntity = validationErrorService.getErrorResponseEntity(result);
+        if (errorResponseEntity != null) {
+            return errorResponseEntity;
+        } else {
+            projectService.saveOrUpdateProject(project);
+            return new ResponseEntity<>(project, HttpStatus.CREATED);
         }
-
-        projectService.saveOrUpdateProject(project);
-
-        return new ResponseEntity<Project>(project, HttpStatus.CREATED);
     }
 }
