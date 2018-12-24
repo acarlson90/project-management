@@ -1,5 +1,7 @@
 package com.aaroncarlson.projectmanagement.model.audit;
 
+import com.aaroncarlson.projectmanagement.util.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -34,9 +36,11 @@ public abstract class DateAudit implements Serializable {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
+    @JsonFormat(pattern = Constants.DATE_FORMAT_TIME_PERCISION)
     private Instant createdAt;
     @LastModifiedDate
     @Column(nullable = false)
+    @JsonFormat(pattern = Constants.DATE_FORMAT_TIME_PERCISION)
     private Instant updatedAt;
 
 }
