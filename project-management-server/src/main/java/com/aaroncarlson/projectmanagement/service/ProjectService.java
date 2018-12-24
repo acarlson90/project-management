@@ -1,5 +1,6 @@
 package com.aaroncarlson.projectmanagement.service;
 
+import com.aaroncarlson.projectmanagement.exception.CustomException;
 import com.aaroncarlson.projectmanagement.model.Project;
 import com.aaroncarlson.projectmanagement.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,11 @@ public class ProjectService {
     public Project saveOrUpdateProject(Project project) {
 
         // Logic to determine ownership when updating
-
-        return projectRepository.save(project);
+        try {
+            project.setIdentifier(project.getIdentifier().toUpperCase());
+            return projectRepository.save(project);
+        } catch (Exception exception) {
+            throw new CustomException("Identifier '" + project.getIdentifier().toUpperCase() + "' must be unique");
+        }
     }
 }
