@@ -1,6 +1,7 @@
 package com.aaroncarlson.projectmanagement.model.audit;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,6 +23,7 @@ import java.time.Instant;
  * AuditEntityListener as the entity listener class
  * @JsonIgnoreProperties - to skip/ignore JSON field when parsing the payload for the entity class
  */
+@Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(
