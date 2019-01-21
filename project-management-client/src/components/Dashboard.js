@@ -48,4 +48,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps, 
   { getProjects }
-  )(Dashboard);
+)(Dashboard);
