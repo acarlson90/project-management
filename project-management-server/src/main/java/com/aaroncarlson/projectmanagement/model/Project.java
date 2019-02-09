@@ -3,6 +3,7 @@ package com.aaroncarlson.projectmanagement.model;
 import com.aaroncarlson.projectmanagement.model.audit.UserDateAudit;
 import com.aaroncarlson.projectmanagement.util.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -33,5 +34,14 @@ public class Project extends UserDateAudit {
     private Date startDate;
     @JsonFormat(pattern = Constants.DATE_FORMAT_DAY_PERCISION)
     private Date endDate;
+    /*
+     * FetchType.EAGER - loads all the backlogs from the database when loading the Project (better to use LAZY)
+     * Cascadetype.ALL - any change to Project must cascade to Backlog (ex: Persist, Merge, etc)
+     * project - needs to be identical to the attribute name of the Project object in Backlog
+     * @JsonManagedReference - is the forward part of reference - the one that gets serialized normally
+     */
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+    @JsonManagedReference
+    private Backlog backlog;
 
 }

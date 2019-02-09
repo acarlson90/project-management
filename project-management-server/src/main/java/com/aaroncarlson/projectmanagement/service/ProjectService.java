@@ -1,7 +1,9 @@
 package com.aaroncarlson.projectmanagement.service;
 
 import com.aaroncarlson.projectmanagement.exception.CustomException;
+import com.aaroncarlson.projectmanagement.model.Backlog;
 import com.aaroncarlson.projectmanagement.model.Project;
+import com.aaroncarlson.projectmanagement.repository.BacklogRepository;
 import com.aaroncarlson.projectmanagement.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,15 +13,26 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private BacklogRepository backlogRepository;
 
     public Project saveOrUpdateProject(Project project) {
+        String identifier = project.getIdentifier().toUpperCase();
 
         // Logic to determine ownership when updating
         try {
-            project.setIdentifier(project.getIdentifier().toUpperCase());
+            if (project.getId() == null) {
+                Backlog backlog = new Backlog();
+                project.setBacklog(backlog);
+                backlog.setProject(project);
+                backlog.setIdentifier(identifier);
+            }
+            if (project.getId() != null) {
+                project.setBacklog(backlogRepository.findByIdentifier(identifier));
+            }
             return projectRepository.save(project);
         } catch (Exception exception) {
-            throw new CustomException("Identifier '" + project.getIdentifier().toUpperCase() + "' must be unique");
+            throw new CustomException("Identifier '" + identifier + "' must be unique");
         }
     }
 
