@@ -1,6 +1,7 @@
 package com.aaroncarlson.projectmanagement.model;
 
 import com.aaroncarlson.projectmanagement.model.audit.UserDateAudit;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -25,7 +26,14 @@ public class Task extends UserDateAudit {
     // When persisting tasks we pass identifier in URL to know which backlog to persist to
     @Column(updatable = false)
     private String identifier;
-
-    // ManyToOne with Backlog (a task can only belong to a singe backlog, and a backlog can have many tasks)
+    /*
+     * Definition - ManyToOne relationship (child side) - Parent is Backlog
+     *  Each Task has a single Backlog and many Task(s) belong to a single Backlog
+     * CascadeType.REFRESH - Can delete/update a Task, then the Backlog is refreshed
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "backlog_id", updatable = false, nullable = false)
+    @JsonBackReference
+    private Backlog backlog;
 
 }

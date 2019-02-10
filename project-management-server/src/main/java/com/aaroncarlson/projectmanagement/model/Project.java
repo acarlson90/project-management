@@ -35,6 +35,8 @@ public class Project extends UserDateAudit {
     @JsonFormat(pattern = Constants.DATE_FORMAT_DAY_PERCISION)
     private Date endDate;
     /*
+     * Definition - OneToOne relationship (parent side) - Child is Backlog
+     *  Each Project has a single Backlog and a backlog only belongs to a single project)
      * FetchType.EAGER - loads all the backlogs from the database when loading the Project (better to use LAZY)
      * Cascadetype.ALL - any change to Project must cascade to Backlog (ex: Persist, Merge, etc)
      * project - needs to be identical to the attribute name of the Project object in Backlog
