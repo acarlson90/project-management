@@ -1,9 +1,9 @@
 package com.aaroncarlson.projectmanagement.service;
 
 import com.aaroncarlson.projectmanagement.exception.CustomException;
-import com.aaroncarlson.projectmanagement.model.Backlog;
+import com.aaroncarlson.projectmanagement.model.Sprint;
 import com.aaroncarlson.projectmanagement.model.Project;
-import com.aaroncarlson.projectmanagement.repository.BacklogRepository;
+import com.aaroncarlson.projectmanagement.repository.SprintRepository;
 import com.aaroncarlson.projectmanagement.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
-    private BacklogRepository backlogRepository;
+    private SprintRepository sprintRepository;
 
     public Project saveOrUpdateProject(Project project) {
         String identifier = project.getIdentifier().toUpperCase();
@@ -22,13 +22,13 @@ public class ProjectService {
         // Logic to determine ownership when updating
         try {
             if (project.getId() == null) {
-                Backlog backlog = new Backlog();
-                project.setBacklog(backlog);
-                backlog.setProject(project);
-                backlog.setIdentifier(identifier);
+                Sprint sprint = new Sprint();
+                sprint.setName("Backlog");
+                project.setSprint(sprint);
+                sprint.setProject(project);
             }
             if (project.getId() != null) {
-                project.setBacklog(backlogRepository.findByIdentifier(identifier));
+                project.setSprint(sprintRepository.findByProject(project));
             }
             return projectRepository.save(project);
         } catch (Exception exception) {
@@ -51,11 +51,7 @@ public class ProjectService {
     }
 
     public void deleteProjectByIdentifier(String identifier) {
-        Project project = projectRepository.findByIdentifier(identifier.toUpperCase());
-
-        if (project == null) {
-            throw new CustomException("Could not delete Project, identifier '" + identifier + "' does not exist");
-        }
+        Project project = findByIdentifier(identifier);
 
         projectRepository.delete(project);
     }
